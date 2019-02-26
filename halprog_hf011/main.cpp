@@ -6,7 +6,7 @@ double sqrt_newton(double num,double x0,int iteration)
 {
     //"xi" will be the approximation for the square root of num after the iteration
     double xi;
-    for(int i;i<=iteration;i++)
+    for(int i=0;i<=iteration;i++)
     {
         //applying Newton's method
         xi=x0-(x0*x0-num)/(2*x0);
