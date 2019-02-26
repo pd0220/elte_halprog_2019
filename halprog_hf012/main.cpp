@@ -32,8 +32,9 @@ void convergence_check(double x0,double x1,double A)
     std::cout<<"Checking for convergence:"<<std::endl;
     for(int n=10;n<=100;n=n+10)
     {
-        std::cout<<"Numerical result after "<<n<<" step(s): "<<integrate(n,x0,x1)<<std::endl;
-        std::cout<<"Difference between analytical and numerical result after "<<n<<" steps: "<<abs(A-integrate(n,x0,x1))<<".\n"<<std::endl;
+        double result=integrate(n,x0,x1);
+        std::cout<<"Numerical result after "<<n<<" step(s): "<<result<<std::endl;
+        std::cout<<"Difference between analytical and numerical result after "<<n<<" steps: "<<abs(A-result)<<".\n"<<std::endl;
     }
 }
 
@@ -68,9 +69,11 @@ int main(int, char**)
     //integration result
     double result=integrate(n,x0,x1);
     std::cout<<"The result of the integration is: "<<result<<".\n"<<std::endl;
+    /*
     //check the convergence
-    //A is the analytical result form WolframAlpha
+    //A is the analytical result form WolframAlpha for the integral within limits x0=-1 and x1=3
     double A=3.4638795680345037669816;
     convergence_check(x0,x1,A);
+    */
 }
 
