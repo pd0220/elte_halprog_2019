@@ -1,7 +1,7 @@
 #include <iostream>
 #include <math.h>
 
-//numeric integration for previously determined function according Newton-Cotes forulma: Composite Trapezoidal Rule
+//numeric integration for previously determined function according to Newton-Cotes formula: Composite Trapezoidal Rule
 //the function will be: f(x)=cos(x)*exp(-x^2) (from the website of the course)
 double y(double x)
 {
