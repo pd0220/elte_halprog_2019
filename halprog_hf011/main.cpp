@@ -1,5 +1,5 @@
 #include <iostream>
-#include <math.h>
+#include <cmath>
 
 //find the square root of "num" by starting the iteration from "x0" using Newton's method (number of interations can be set too)
 double sqrt_newton(double num,double x0,int iteration)
