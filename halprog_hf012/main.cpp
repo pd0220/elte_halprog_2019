@@ -69,11 +69,10 @@ int main(int, char**)
     //integration result
     double result=integrate(n,x0,x1);
     std::cout<<"The result of the integration is: "<<result<<".\n"<<std::endl;
-    /*
+    
     //check the convergence
     //A is the analytical result form WolframAlpha for the integral within limits x0=-1 and x1=3
-    double A=3.4638795680345037669816;
+    double A=1.34638795680345037669816;
     convergence_check(x0,x1,A);
-    */
 }
 
