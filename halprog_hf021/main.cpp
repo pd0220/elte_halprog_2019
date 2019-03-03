@@ -2,15 +2,15 @@
 #include <cmath>
 
 //Newton's method to find the root of a given function
-template<typename F,typename dF,typename CheckF>
-double Newton(F f,dF df,double x0,CheckF checkf)
+template<typename F,typename dF,typename CheckF,typename T>
+double Newton(F f,dF df,T x0,CheckF checkf)
 {
     //the result will be stored in this variable
-    double xi;
+    T xi;
     for(int i=0;;i++)
     {
         xi=x0-f(x0)/df(x0);
-        if(checkf(xi,x0))
+        if(checkf(xi,x0)==false)
         {
             break;
         }
@@ -23,7 +23,7 @@ double Newton(F f,dF df,double x0,CheckF checkf)
 bool check_iteration(double xi,double x0)
 {
     double lim=1e-14;
-    return std::abs(xi-x0)<lim;  
+    return std::abs(xi-x0)>lim;  
 }
 
 //main function
