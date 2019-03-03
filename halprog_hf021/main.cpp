@@ -35,6 +35,5 @@ int main(int, char**)
     //result
     //squre root of 612.0
     double result=Newton([](double x){return x*x-612;},[](double x){return 2.0*x;},10.0,check_iteration);
-    std::cout<<result<<std::endl;
-    
+    std::cout<<result<<std::endl; 
 }
