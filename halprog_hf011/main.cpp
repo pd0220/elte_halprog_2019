@@ -4,6 +4,25 @@
 //find the square root of "num" by starting the iteration from "x0" using Newton's method (number of interations can be set too)
 double sqrt_newton(double num,double x0,int iteration)
 {    
+    //argument check
+    if(num<0)
+    {
+        std::cout<<"ERROR\nSquare root of a negative number is not interpreted on the plain of real numbers."<<std::endl;
+        exit(-1);
+    }
+
+    if(x0<=0)
+    {
+        std::cout<<"ERROR\nInitial guess must be positive."<<std::endl;
+        exit(-1);
+    }
+
+    if(iteration<=0)
+    {
+        std::cout<<"ERROR\nNumber of iterations are not enough."<<std::endl;
+        exit(-1);
+    }
+
     //"xi" will be the approximation for the square root of num after the iteration
     double xi;
     for(int i=0;i<=iteration;i++)
@@ -44,27 +63,15 @@ int main(int, char**)
     std::cout<<"Your number is:"<<std::endl;
     double num;
     std::cin>>num;
-    if(num<0)
-    {
-        std::cout<<"ERROR\nSquare root of a negative number is not interpreted on the plain of real numbers."<<std::endl;
-        exit(-1);
-    }
-    std::cout<<"The iteration will start from an inital guess.\nYour inital guess is:"<<std::endl;
+    
+    std::cout<<"The iteration will start from an initial guess.\nYour initial guess is:"<<std::endl;
     double x0;
     std::cin>>x0;
-    if(x0<=0)
-    {
-        std::cout<<"ERROR\nInital guess must be positive."<<std::endl;
-        exit(-1);
-    }    
+        
     std::cout<<"You can set the number of iterations.\nNumber of iterations will be:"<<std::endl;
     int iteration;
     std::cin>>iteration;
-    if(iteration<=0)
-    {
-        std::cout<<"ERROR\nNumber of iterations are not enough."<<std::endl;
-        exit(-1);
-    }
+    
     
     //result
     double num_sqrt=sqrt_newton(num,x0,iteration);
