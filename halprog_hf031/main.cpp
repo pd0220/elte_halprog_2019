@@ -16,7 +16,10 @@ double mean(const std::vector<double>& vec)
 //linear fit function
 std::array<double,2> linear_fit(const std::vector<double>& X,const std::vector<double>& Y)
 {
-    
+    double b=std::accumulate(X.begin(),X.end(),0,double f=[](double a,double b){return a-b;};
+
+
+
     std::array<double,2> result;
 
     return result;
