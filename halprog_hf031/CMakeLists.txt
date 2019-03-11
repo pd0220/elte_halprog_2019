@@ -18,8 +18,11 @@ target_compile_options(${PROJECT_NAME} PRIVATE $<$<OR:$<CXX_COMPILER_ID:GNU>,$<C
                                                $<$<CXX_COMPILER_ID:MSVC>:/W4 /permissive->)
 
 if(BUILD_TESTING)
-  add_executable(test1 test.cpp)
+  add_executable(test1 test1.cpp)
   add_test(NAME test1 COMMAND test1)
+
+  add_executable(test2 test2.cpp)
+  add_test(NAME test2 COMMAND test2)
 endif(BUILD_TESTING)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})

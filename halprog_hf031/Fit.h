@@ -30,13 +30,12 @@ std::array<double,2> linear_fit(const std::vector<double>& X,const std::vector<d
         std::cout<<"Error\nNumber of elements must be equal int the given vectors."<<std::endl;
         exit(-2);
     }
-
+    //check if the given vectors have enough elements to fit
     if(static_cast<int>(X.size())==1 || static_cast<int>(Y.size())==1)
     {
         std::cout<<"Error\nLinear fit cannot be made through one point."<<std::endl;
         exit(-3);
     }
-    
 
     //means and difference vectors
     double mean_X=mean(X);
@@ -77,12 +76,19 @@ double r_squared(const std::vector<double>& X,const std::vector<double>& Y)
         std::cout<<"Error\nNumber of elements must be equal int the given vectors."<<std::endl;
         exit(-2);
     }
-
+    //check if the given vectors have enough elements to fit
     if(static_cast<int>(X.size())==1 || static_cast<int>(Y.size())==1)
     {
         std::cout<<"Error\nLinear fit cannot be made through one point."<<std::endl;
         exit(-3);
     }
+    //check if Y vector is constant --> r^2 would be NaN
+    if(std::equal(Y.begin()+1,Y.end(),Y.begin()))
+    {
+        std::cout<<"Error\nVector Y is constant, r^2 cannot be calculated."<<std::endl;
+        exit(-4);
+    }
+
 
     //means of values
     double mean_X=mean(X);
