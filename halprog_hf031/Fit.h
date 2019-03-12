@@ -36,6 +36,19 @@ std::array<double,2> linear_fit(const std::vector<double>& X,const std::vector<d
         std::cout<<"Error\nLinear fit cannot be made through one point."<<std::endl;
         exit(-3);
     }
+    //check if X vector has at least two identical elements
+    std::vector<double> X_sort;
+    X_sort.assign(X.begin(),X.end());
+    std::sort(X_sort.begin(),X_sort.end());
+    for(int i=0;i<static_cast<int>(X_sort.size());i++)
+    {
+        if(X_sort[i]==X_sort[i+1])
+        {
+            std::cout<<"Error\nVector X cannot have identical elements."<<std::endl;
+            exit(-5);            
+        }
+    }
+
 
     //means and difference vectors
     double mean_X=mean(X);
@@ -87,6 +100,18 @@ double r_squared(const std::vector<double>& X,const std::vector<double>& Y)
     {
         std::cout<<"Error\nVector Y is constant, r^2 cannot be calculated."<<std::endl;
         exit(-4);
+    }
+    //check if X vector has at least two identical elements
+    std::vector<double> X_sort;
+    X_sort.assign(X.begin(),X.end());
+    std::sort(X_sort.begin(),X_sort.end());
+    for(int i=0;i<static_cast<int>(X_sort.size());i++)
+    {
+        if(X_sort[i]==X_sort[i+1])
+        {
+            std::cout<<"Error\nVector X cannot have identical elements."<<std::endl;
+            exit(-5);            
+        }
     }
 
 
