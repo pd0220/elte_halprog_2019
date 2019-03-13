@@ -134,3 +134,11 @@ vector2<T> normalize(vector2<T> const& v)
     }
     return vector2<T>{v.x,v.y}/length(v);
 }
+
+//rotation around a given angle
+template<typename T,typename a>
+auto rotate(vector2<T> const& v,a phi)
+{
+    using R=decltype(v.x*std::sin(phi));
+    return vector2<R>{v.x*std::cos(phi)-v.y*std::sin(phi),v.x*std::cos(phi)+v.y*std::sin(phi)};
+}
