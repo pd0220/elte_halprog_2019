@@ -5,6 +5,9 @@
 #include <numeric>
 #include <algorithm>
 
+//calculating square of given object
+    auto sq=[](auto x){return x*x;};
+
 //calculating mean of values
 double mean(const std::vector<double>& vec)
 {
@@ -31,11 +34,8 @@ double mean_sq(const std::vector<double>& vec)
         exit(-1);
     }
 
-    //calculate square of given value
-    auto sq=[](double x){return x*x;};
-
     //calculating mean
-    double x_sq=std::accumulate(vec.begin(),vec.end(),0.0,[sq](double a,double b){return a+sq(b);})/static_cast<double>(vec.size());
+    double x_sq=std::accumulate(vec.begin(),vec.end(),0.0,[](double a,double b){return a+sq(b);})/static_cast<double>(vec.size());
 
     return x_sq;
 }
@@ -111,9 +111,6 @@ double r_squared(const std::vector<double>& X,const std::vector<double>& Y)
     //means of values
     double mean_X=mean(X);
     double mean_Y=mean(Y);
-
-    //calculating square of given object
-    auto sq=[](auto x){return x*x;};
 
     //means of squared values
     double mean_X2=mean_sq(X);
