@@ -6,7 +6,7 @@
 #include <algorithm>
 
 //calculating square of given object
-    auto sq=[](auto x){return x*x;};
+auto sq=[](auto x){return x*x;};
 
 //calculating mean of values
 double mean(const std::vector<double>& vec)
