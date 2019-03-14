@@ -19,8 +19,17 @@ struct vector2
     template<typename t>
     auto& operator+=(vector2<t> const& v)
     {
-        x+= v.x;
-        y+= v.y;
+        x+=(t)v.x;
+        y+=(t)v.y;
+        return *this;
+    }
+
+    //substraction
+    template<typename t>
+    auto& operator-=(vector2<t> const& v)
+    {
+        x-=(t)v.x;
+        y-=(t)v.y;
         return *this;
     }
 
@@ -28,8 +37,8 @@ struct vector2
     template<typename t>
     auto& operator*=(t const& a)
     {
-        x*=a;
-        y*=a;
+        x*=(t)a;
+        y*=(t)a;
         return *this;
     }
 
@@ -37,8 +46,8 @@ struct vector2
     template<typename t>
     auto& operator/=(t const& a)
     {
-        x/=a;
-        y/=a;
+        x/=(t)a;
+        y/=(t)a;
         return *this;
     }
 };
@@ -68,6 +77,14 @@ auto operator+(vector2<T1> const& v1,vector2<T2> const& v2)
     return vector2<R>{v1.x+v2.x,v1.y+v2.y};
 }
 
+//substraction of vectors (-)
+template<typename T1,typename T2>
+auto operator-(vector2<T1> const& v1,vector2<T2> const& v2)
+{
+    using R=decltype(v1.x-v2.x);
+    return vector2<R>{v1.x-v2.x,v1.y-v2.y};
+}
+
 //multiplication by a scalar (from right) (*)
 template<typename Tv,typename T>
 auto operator*(vector2<Tv> const& v,T const& a)
@@ -80,8 +97,8 @@ auto operator*(vector2<Tv> const& v,T const& a)
 template<typename Tv,typename T>
 auto operator*(T const& a,vector2<Tv> const& v)
 {
-    using R=decltype(v.x*a);
-    return vector2<R>{v.x*a,v.y*a};
+    using R=decltype(a*v.x);
+    return vector2<R>{a*v.x,a*v.y};
 }
 
 //division by a scalar (/)
@@ -96,10 +113,10 @@ auto operator/(vector2<Tv> const& v,T const& a)
 template<typename T1,typename T2>
 auto dot(vector2<T1> const& v1,vector2<T2> const& v2)
 {
-    return v1.x*v1.y+v1.y*v2.y;
+    return v1.x*v2.x+v1.y*v2.y;
 }
 
-//lenght a vector
+//lenght of a vector
 template<typename T>
 auto length(vector2<T> const& v)
 {
@@ -132,13 +149,17 @@ vector2<T> normalize(vector2<T> const& v)
         std::cout<<"error\nLenght of vector cannot be interpreted."<<std::endl;
         exit(-1);
     }
-    return vector2<T>{v.x,v.y}/length(v);
+    return v/length(v);
 }
 
 //rotation around a given angle
 template<typename T,typename a>
 auto rotate(vector2<T> const& v,a phi)
 {
-    using R=decltype(v.x*std::sin(phi));
-    return vector2<R>{v.x*std::cos(phi)-v.y*std::sin(phi),v.x*std::cos(phi)+v.y*std::sin(phi)};
+    //calculating trigonometric functions
+    a sin_phi=std::sin(phi);
+    a cos_phi=std::cos(phi);
+    //rotation
+    using R=decltype(v.x*sin_phi);
+    return vector2<R>{v.x*cos_phi-v.y*sin_phi,v.x*sin_phi+v.y*cos_phi};
 }
