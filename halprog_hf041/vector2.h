@@ -62,7 +62,7 @@ std::ostream& operator<<(std::ostream& o,vector2<T> const& v)
 
 //input stream
 template<typename T>
-std::istream& operator>>(std::istream& i,vector2<T> const& v)
+std::istream& operator>>(std::istream& i,vector2<T> & v)
 {
     i>>v.x;
     i>>v.y;
