@@ -35,6 +35,29 @@ auto sub=[](auto const& x,auto const& y){return x-y;};
 
 //--------------------------------------------------------------------------------------------------------
 
+//matrix multiplication function
+template<typename T>
+std::vector<T> mat_mul(std::vector<T> const& data1,std::vector<T> const& data2,int const& N)
+{
+    std::vector<T> tmp;
+    tmp.resize(data1.size());
+    for(int i{0};i<=N-1;i++)
+    {
+        for(int j{0};j<=N-1;j++)
+        {
+            T val{0};
+            for(int k{0};k<=N-1;k++)
+            {
+                val+=data1[N*i+k]*data2[N*k+j];
+            }
+            tmp[N*i+j]=val;
+        }
+    }
+    return tmp;
+}
+
+//--------------------------------------------------------------------------------------------------------
+
 //matrix struct (square matrices only)
 template<typename T>
 struct matrix
@@ -57,16 +80,19 @@ struct matrix
     //move assignment
 	matrix<T>& operator=(matrix&&)=default;
     //initializer list
-    matrix(std::initializer_list<T> const&  i): data{i}{}
+    matrix(std::initializer_list<T> const& i): data{i}{}
     //function of indexes
  	template<typename F>
 	matrix(F f,int n)
 	{
 		data.resize(n);
         N=std::sqrt(static_cast<int>(data.size()));
-		for(int i=0;i<n;i++)
+        for(int i=0;i<=n-1;i++)
         {
-            data[i]=f(i);
+            for(int j=0;j<=n-1;j++)
+            {
+                data[N*i+j]=f(i,j);
+            }
         }
     }
 
@@ -88,7 +114,7 @@ struct matrix
     //addtition assignment of matrices (+=)
     matrix<T>& operator+=(matrix<T> const& m)
     {
-        detail::transform_mat2(this->data,m.data,this->data,add);
+        detail::transform_mat2((*this).data,m.data,(*this).data,add);
         return *this;
     }
 
@@ -97,7 +123,7 @@ struct matrix
     //substracion assignment of matrices (-=)
     matrix<T>& operator-=(matrix<T> const& m)
     {
-        detail::transform_mat2(this->data,m.data,this->data,sub);
+        detail::transform_mat2((*this).data,m.data,(*this).data,sub);
         return *this;
     }
 
@@ -106,7 +132,7 @@ struct matrix
     //multiplication assignment by scalar (*=)
     matrix<T>& operator*=(T const& scl)
     {
-        detail::transform_mat1(this->data,this->data,[=](T const& x){return x*scl;});
+        detail::transform_mat1((*this).data,(*this).data,[=](T const& x){return x*scl;});
         return *this;
     }
 
@@ -115,7 +141,7 @@ struct matrix
     //division assignment by scalar (/=)
     matrix<T>& operator/=(T const& scl)
     {
-        detail::transform_mat1(this->data,this->data,[=](T const& x){return x/scl;});
+        detail::transform_mat1((*this).data,(*this).data,[=](T const& x){return x/scl;});
         return *this;
     }
 
@@ -124,22 +150,9 @@ struct matrix
     //multiplication assignment of matrices (*=)
     matrix<T>& operator*=(matrix<T> const& m)
     {
-        matrix<T> result;
-        int n=this->N;
-        std::vector<T> tmp;
-        for(int i{0};i<=n-1;i++)
-        {
-            for(int j{0};j<=n-1;j++)
-            {
-                T val{0};
-                for(int k{0};k<=n-1;k++)
-                {
-                    val+=this->data[this->N*i+k]*m(k,j);
-                }
-                tmp.push_back(val);
-            }
-        }
-        this->data.swap(tmp);
+        int n=(*this).N;
+        std::vector<T> tmp=mat_mul((*this).data,m.data,n);        
+        (*this).data.swap(tmp);
         return *this;
     } 
 
@@ -309,22 +322,11 @@ matrix<T> && operator/(matrix<T> && m,T const& scl)
 //4 types
 template<typename T>
 matrix<T> operator*(matrix<T> const& m1,matrix<T> const& m2)
-{
+{  
     matrix<T> result;
     int n{m1.N};
     result.N=n;
-    for(int i{0};i<=n-1;i++)
-    {
-        for(int j{0};j<=n-1;j++)
-        {
-            T val{0};
-            for(int k{0};k<=n-1;k++)
-            {
-                val+=m1(i,k)*m2(k,j);
-            }
-            result.data.push_back(val);
-        }
-    }
+    result.data=mat_mul(m1.data,m2.data,n);
     return result;
 }
 
@@ -332,19 +334,7 @@ template<typename T>
 matrix<T> && operator*(matrix<T> const& m1,matrix<T> && m2)
 {
     int n{m1.N};
-    std::vector<T> tmp;
-    for(int i{0};i<=n-1;i++)
-    {
-        for(int j{0};j<=n-1;j++)
-        {
-            T val{0};
-            for(int k{0};k<=n-1;k++)
-            {
-                val+=m1(i,k)*m2(k,j);
-            }
-            tmp.push_back(val);
-        }
-    }
+    std::vector<T> tmp=mat_mul(m1.data,m2.data,n);
     m2.data.swap(tmp);
     return std::move(m2);
 }
@@ -353,19 +343,7 @@ template<typename T>
 matrix<T> && operator*(matrix<T> && m1,matrix<T> const& m2)
 {
     int n{m1.N};
-    std::vector<T> tmp;
-    for(int i{0};i<=n-1;i++)
-    {
-        for(int j{0};j<=n-1;j++)
-        {
-            T val{0};
-            for(int k{0};k<=n-1;k++)
-            {
-                val+=m1(i,k)*m2(k,j);                         
-            }
-            tmp.push_back(val);
-        }
-    }
+    std::vector<T> tmp=mat_mul(m1.data,m2.data,n);
     m1.data.swap(tmp);
     return std::move(m1);
 }
@@ -374,19 +352,7 @@ template<typename T>
 matrix<T> && operator*(matrix<T> && m1,matrix<T> && m2)
 {
     int n{m1.N};
-    std::vector<T> tmp;
-    for(int i{0};i<=n-1;i++)
-    {
-        for(int j{0};j<=n-1;j++)
-        {
-            T val{0};
-            for(int k{0};k<=n-1;k++)
-            {
-                val+=m1(i,k)*m2(k,j);
-            }
-            tmp.push_back(val);
-        }
-    }
+    std::vector<T> tmp=mat_mul(m1.data,m2.data,n);
     m1.data.swap(tmp);
     return std::move(m1);
 }
@@ -411,4 +377,30 @@ std::ostream& operator<<(std::ostream& o,matrix<T> const& m)
 		}
 	}
 	return o;
+}
+
+
+//check if two 2x2 matrices are equal
+template<typename T>
+bool mat_eq(matrix<T> const& m1,matrix<T> const& m2)
+{
+    double eps{1e-10};
+    if(std::abs(m1(0,0)-m2(0,0))>eps || std::abs(m1(0,1)-m2(0,1))>eps || std::abs(m1(1,0)-m2(1,0))>eps || std::abs(m1(1,1)-m2(1,1))>eps)
+    {
+        return 1;
+    }
+    if(m1.data.size()!=m1.data.size() || m1.N!=m2.N)
+    {
+        return 1;
+    }
+}
+
+//check if .N and .data.size() are 0
+template<typename T>
+bool mat_if0(matrix<T> const& m)
+{
+    if(m.N!=0 || m.data.size()!=0)
+    {
+        return 1;
+    }
 }

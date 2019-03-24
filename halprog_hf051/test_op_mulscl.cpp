@@ -15,31 +15,21 @@ int main(int,char**)
 
     //const& (from right)
     matrix<double> ma_r{m11*a};
-    if(std::abs(ma(0,0)-ma_r(0,0))>1e-5 || std::abs(ma(0,1)-ma_r(0,1))>1e-5 || std::abs(ma(1,0)-ma_r(1,0))>1e-5 || std::abs(ma(1,1)-ma_r(1,1))>1e-5)
-    {
-        return 1;
-    }
+    mat_eq(ma,ma_r);
 
     //const& (from left)
     matrix<double> ma_l{a*m12};
-    if(std::abs(ma(0,0)-ma_l(0,0))>1e-5 || std::abs(ma(0,1)-ma_l(0,1))>1e-5 || std::abs(ma(1,0)-ma_l(1,0))>1e-5 || std::abs(ma(1,1)-ma_l(1,1))>1e-5)
-    {
-        return 1;
-    }
+    mat_eq(ma,ma_l);
 
     //&& (from right)
     matrix<double> ma_r_ref{std::move(m11)*a};
-    if(std::abs(ma(0,0)-ma_r_ref(0,0))>1e-5 || std::abs(ma(0,1)-ma_r_ref(0,1))>1e-5 || std::abs(ma(1,0)-ma_r_ref(1,0))>1e-5 || std::abs(ma(1,1)-ma_r_ref(1,1))>1e-5)
-    {
-        return 1;
-    }
+    mat_eq(ma,ma_r_ref);
+    mat_if0(ma_r_ref);
 
     //&& (from left)
     matrix<double> ma_l_ref{a*std::move(m12)};
-    if(std::abs(ma(0,0)-ma_l_ref(0,0))>1e-5 || std::abs(ma(0,1)-ma_l_ref(0,1))>1e-5 || std::abs(ma(1,0)-ma_l_ref(1,0))>1e-5 || std::abs(ma(1,1)-ma_l_ref(1,1))>1e-5)
-    {
-        return 1;
-    }
+    mat_eq(ma,ma_l_ref);
+    mat_if0(ma_l_ref);
 
     return 0;
 }

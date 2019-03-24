@@ -16,31 +16,23 @@ int main(int,char**)
 
     //const& - const&
     matrix<double> msub1{m1-m2};
-    if(std::abs(m3(0,0)-msub1(0,0))>1e-5 || std::abs(m3(0,1)-msub1(0,1))>1e-5 || std::abs(m3(1,0)-msub1(1,0))>1e-5 || std::abs(m3(1,1)-msub1(1,1))>1e-5)
-    {
-        return 1;
-    }
+    mat_eq(m3,msub1);
 
     //const& - &&
     matrix<double> msub2{m1-std::move(m2_ref1)};
-    if(std::abs(m3(0,0)-msub2(0,0))>1e-5 || std::abs(m3(0,1)-msub2(0,1))>1e-5 || std::abs(m3(1,0)-msub2(1,0))>1e-5 || std::abs(m3(1,1)-msub2(1,1))>1e-5)
-    {
-        return 1;
-    }
+    mat_eq(m3,msub2);
+    mat_if0(m2_ref1);
 
     //&& - const&
     matrix<double> msub3{std::move(m1_ref1)-m2};
-    if(std::abs(m3(0,0)-msub3(0,0))>1e-5 || std::abs(m3(0,1)-msub3(0,1))>1e-5 || std::abs(m3(1,0)-msub3(1,0))>1e-5 || std::abs(m3(1,1)-msub3(1,1))>1e-5)
-    {
-        return 1;
-    }
+    mat_eq(m3,msub3);
+    mat_if0(m1_ref1);
 
     //&& - &&
     matrix<double> msub4{std::move(m1_ref2)-std::move(m2_ref2)};
-    if(std::abs(m3(0,0)-msub4(0,0))>1e-5 || std::abs(m3(0,1)-msub4(0,1))>1e-5 || std::abs(m3(1,0)-msub4(1,0))>1e-5 || std::abs(m3(1,1)-msub4(1,1))>1e-5)
-    {
-        return 1;
-    }
-
+    mat_eq(m3,msub4);
+    mat_if0(m1_ref2);
+    mat_if0(m2_ref2);
+    
     return 0;
 }

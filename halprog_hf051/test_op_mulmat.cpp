@@ -14,33 +14,25 @@ int main(int,char**)
      matrix<double> m2_ref2{m2};
      matrix<double> m3{{65.89,24.06,49.61,18.06}};
 
-     //const& - const&
-     matrix<double> mmul1{m1*m2};
-     if(std::abs(m3(0,0)-mmul1(0,0))>1e-5 || std::abs(m3(0,1)-mmul1(0,1))>1e-5 || std::abs(m3(1,0)-mmul1(1,0))>1e-5 || std::abs(m3(1,1)-mmul1(1,1))>1e-5)
-     {
-        return 1;
-     }
-
+    //const& - const&
+    matrix<double> mmul1{m1*m2};
+    mat_eq(m3,mmul1);
+    
     //const& - &&
     matrix<double> mmul2{m1*std::move(m2_ref1)};
-    if(std::abs(m3(0,0)-mmul2(0,0))>1e-5 || std::abs(m3(0,1)-mmul2(0,1))>1e-5 || std::abs(m3(1,0)-mmul2(1,0))>1e-5 || std::abs(m3(1,1)-mmul2(1,1))>1e-5)
-    {
-        return 1;
-    }
+    mat_eq(m3,mmul2);
+    mat_if0(m2_ref1);
 
     //&& - const&
     matrix<double> mmul3={std::move(m1_ref1)*m2};
-    if(std::abs(m3(0,0)-mmul3(0,0))>1e-5 || std::abs(m3(0,1)-mmul3(0,1))>1e-5 || std::abs(m3(1,0)-mmul3(1,0))>1e-5 || std::abs(m3(1,1)-mmul3(1,1))>1e-5)
-    {
-        return 1;
-    }
+    mat_eq(m3,mmul3);
+    mat_if0(m1_ref1);
 
     //&& - &&
     matrix<double> mmul4={std::move(m1_ref2)*std::move(m2_ref2)};
-    if(std::abs(m3(0,0)-mmul4(0,0))>1e-5 || std::abs(m3(0,1)-mmul4(0,1))>1e-5 || std::abs(m3(1,0)-mmul4(1,0))>1e-5 || std::abs(m3(1,1)-mmul4(1,1))>1e-5)
-    {
-        return 1;
-    }
-
+    mat_eq(m3,mmul4);
+    mat_if0(m1_ref2);
+    mat_if0(m2_ref2);
+    
     return 0;
 }
