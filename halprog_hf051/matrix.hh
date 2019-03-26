@@ -85,11 +85,11 @@ struct matrix
  	template<typename F>
 	matrix(F f,int n)
 	{
-		data.resize(n);
-        N=std::sqrt(static_cast<int>(data.size()));
-        for(int i=0;i<=n-1;i++)
+		data.resize(static_cast<size_t>(n*n));
+        N=n;
+        for(int i=0;i<=N-1;i++)
         {
-            for(int j=0;j<=n-1;j++)
+            for(int j=0;j<=N-1;j++)
             {
                 data[N*i+j]=f(i,j);
             }
@@ -382,25 +382,33 @@ std::ostream& operator<<(std::ostream& o,matrix<T> const& m)
 
 //check if two 2x2 matrices are equal
 template<typename T>
-bool mat_eq(matrix<T> const& m1,matrix<T> const& m2)
+void mat_eq(matrix<T> const& m1,matrix<T> const& m2)
 {
     double eps{1e-10};
     if(std::abs(m1(0,0)-m2(0,0))>eps || std::abs(m1(0,1)-m2(0,1))>eps || std::abs(m1(1,0)-m2(1,0))>eps || std::abs(m1(1,1)-m2(1,1))>eps)
     {
-        return 1;
+        std::cout<<"Elements are not equal in given matrices."<<std::endl;
+        std::exit(-1);
     }
-    if(m1.data.size()!=m1.data.size() || m1.N!=m2.N)
+    if(m1.size()!=m1.size() || m1.N!=m2.N)
     {
-        return 1;
+        std::cout<<"Matrix variables are not equal in given matrices."<<std::endl;
+        std::exit(-1);
+    }
+    if(m1.size()!=static_cast<size_t>(4) || m2.size()!=static_cast<size_t>(4) || m1.N!=2 || m2.N!=2)
+    {
+        std::cout<<"Given matrices are not 2X2."<<std::endl;
+        std::exit(-1);
     }
 }
 
-//check if .N and .data.size() are 0
+//check .data.size() are 0
 template<typename T>
-bool mat_if0(matrix<T> const& m)
+void mat_if0(matrix<T> const& m)
 {
-    if(m.N!=0 || m.data.size()!=0)
+    if(m.size()!=static_cast<size_t>(0))
     {
-        return 1;
+        std::cout<<"Given matrix size are not 0."<<std::endl;
+        std::exit(-1);
     }
 }

@@ -30,7 +30,7 @@ int main(int,char**)
     mat_if0(m2);
 
     //function of indexes
-    matrix<double> m4([](int i,int j){ return i+j;},4);
+    matrix<double> m4([](int i,int j){ return i+j;},2);
     if(m4.size()!=4 || m4.N!=2 || m4(0,0)!=0 || m4(0,1)!=1 || m4(1,0)!=1 || m4(1,1)!=2)
     {
         return 1;

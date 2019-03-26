@@ -32,7 +32,6 @@ int main(int,char**)
     matrix<double> msub4{std::move(m1_ref2)-std::move(m2_ref2)};
     mat_eq(m3,msub4);
     mat_if0(m1_ref2);
-    mat_if0(m2_ref2);
     
     return 0;
 }

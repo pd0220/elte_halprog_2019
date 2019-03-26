@@ -24,12 +24,12 @@ int main(int,char**)
     //&& (from right)
     matrix<double> ma_r_ref{std::move(m11)*a};
     mat_eq(ma,ma_r_ref);
-    mat_if0(ma_r_ref);
+    mat_if0(m11);
 
     //&& (from left)
     matrix<double> ma_l_ref{a*std::move(m12)};
     mat_eq(ma,ma_l_ref);
-    mat_if0(ma_l_ref);
+    mat_if0(m12);
 
     return 0;
 }

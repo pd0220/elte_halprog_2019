@@ -40,7 +40,7 @@ int main(int,char**)
 
     ///= (scalar)
     //m1/a=mdiv={{3.75,2.83333},{2.75,2.16667}} from WolframAlpha
-    matrix<double> mdiv{{3.75,2.83333,2.75,2.16667}};
+    matrix<double> mdiv{{3.75,2.8333333333333333,2.75,2.1666666666666667}};
     matrix<double> m1_cpy5{m1};
     m1_cpy5/=a;
     mat_eq(mdiv,m1_cpy5);
