@@ -1,5 +1,7 @@
 #include <iostream>
 #include <cmath>
+#include <string>
+#include <sstream>
 
 //vector struct
 template<typename T>
@@ -56,7 +58,7 @@ struct vector2
 template<typename T>
 std::ostream& operator<<(std::ostream& o,vector2<T> const& v)
 {
-    o<<"("<<v.x<<","<<v.y<<")";
+    o<<v.x<<","<<v.y;
     return o;
 }
 
@@ -64,8 +66,19 @@ std::ostream& operator<<(std::ostream& o,vector2<T> const& v)
 template<typename T>
 std::istream& operator>>(std::istream& i,vector2<T> & v)
 {
-    i>>v.x;
-    i>>v.y;
+    auto restore_stream=[state=i.rdstate(),pos=i.tellg(),&i](){i.seekg(pos);i.setstate(state);};
+    
+    std::string tmp;
+    std::getline(i,tmp);
+    std::stringstream ii(tmp);
+
+    std::getline(ii,tmp,',');
+    if(tmp.size()==0){restore_stream();return i;}
+    v.x=std::stod(tmp);
+
+    std::getline(ii,tmp);
+    if(tmp.size()==0){restore_stream();return i;}
+    v.y=std::stod(tmp);
     return i;
 }
 
