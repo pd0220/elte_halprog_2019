@@ -434,14 +434,18 @@ std::ostream& operator<<(std::ostream& o,matrix<T> const& m)
 template<typename T>
 std::istream& operator>>(std::istream& i,matrix<T> & m)
 {
+    auto restore_stream=[state=i.rdstate(),pos=i.tellg(),&i](){i.seekg(pos);i.setstate(state);};
+    
     std::string tmp;
     std::getline(i,tmp);
     std::stringstream ii(tmp);
     std::getline(ii,tmp,',');
+    if(tmp.size()==0){restore_stream();return i;}
     m.N=std::stoi(tmp);
     for(int j=0;j<=m.N*m.N-1;j++)
     {
         std::getline(ii,tmp,',');
+        if(tmp.size()==0){restore_stream();return i;}
         m.data[j]=std::stod(tmp);
     }
     return i;
