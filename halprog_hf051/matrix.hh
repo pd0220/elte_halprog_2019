@@ -4,6 +4,8 @@
 #include <numeric>
 #include <vector>
 #include <initializer_list>
+#include <string>
+#include <sstream>
 
 //general assumptions:
 //(1) the user will use square matrices only
@@ -35,11 +37,20 @@ auto sub=[](auto const& x,auto const& y){return x-y;};
 
 //--------------------------------------------------------------------------------------------------------
 
-//matrix multiplication function
+//matrix multiplication function for square matrices
+//2 types
 template<typename T>
-std::vector<T> mat_mul(std::vector<T> const& data1,std::vector<T> const& data2,int const& N)
+std::vector<T> mat_mul(std::vector<T> const& data1,std::vector<T> const& data2)
 {
     std::vector<T> tmp;
+    double N{std::sqrt(data1.size())};
+    //check if given matrices are square matrices
+    if(N-std::floor(N)!=0)
+    {
+        std::cout<<"Given matrices are not square matrices."<<std::endl;
+        std::exit(-1);
+    }
+    N=static_cast<int>(N);
     tmp.resize(data1.size());
     for(int i{0};i<=N-1;i++)
     {
@@ -56,6 +67,38 @@ std::vector<T> mat_mul(std::vector<T> const& data1,std::vector<T> const& data2,i
     return tmp;
 }
 
+template<typename T>
+std::vector<T> mat_mul(std::vector<T> && data1,std::vector<T> const& data2)
+{
+    std::vector<T> tmp_vec;
+    double N{std::sqrt(data1.size())};
+    //check if given matrices are square matrices
+    if(N-std::floor(N)!=0)
+    {
+        std::cout<<"Given matrices are not square matrices."<<std::endl;
+        std::exit(-1);
+    }
+    N=static_cast<int>(N);
+    tmp_vec.resize(N);
+    for(int i{0};i<=N-1;i++)
+    {
+        for(int j{0};j<=N-1;j++)
+        {
+            T val{0};
+            for(int k{0};k<=N-1;k++)
+            {
+                val+=data1[N*i+k]*data2[N*k+j];
+            }
+            tmp_vec[j]=val;
+        }
+        for(int j{0};j<=N-1;j++)
+        {
+            data1[N*i+j]=tmp_vec[j];
+        }
+    }
+    return std::move(data1);
+}
+
 //--------------------------------------------------------------------------------------------------------
 
 //matrix struct (square matrices only)
@@ -63,14 +106,23 @@ template<typename T>
 struct matrix
 {
     //variables
+    int N;
     std::vector<T> data;
-    int N=std::sqrt(static_cast<int>(data.size()));
 
 //--------------------------------------------------------------------------------------------------------
 
     //constructors
     //default
-  	matrix()=default;
+  	matrix():N{0}
+    {
+        data.resize(static_cast<size_t>(N));
+    }
+    //parameterized default
+    matrix(int n):N{n}
+    {
+        data.resize(static_cast<size_t>(N*N));
+        std::transform(data.cbegin(),data.cend(),data.begin(),[](auto const& x){return 0*x;});
+    }
     //copy
 	matrix(matrix const&)=default;
     //move
@@ -80,8 +132,15 @@ struct matrix
     //move assignment
 	matrix<T>& operator=(matrix&&)=default;
     //initializer list
-    matrix(std::initializer_list<T> const& i): data{i}{}
-    //function of indexes
+    matrix(int n,std::initializer_list<T> const& i):N{n},data{i}
+    {
+        if(i.size()!=static_cast<size_t>(N*N))
+        {
+            std::cout<<"Initializer list is not appropriate for matrix dimension."<<std::endl;
+            std::exit(-1);
+        }
+    }
+    //function of 2 indices
  	template<typename F>
 	matrix(F f,int n)
 	{
@@ -151,7 +210,7 @@ struct matrix
     matrix<T>& operator*=(matrix<T> const& m)
     {
         int n=(*this).N;
-        std::vector<T> tmp=mat_mul((*this).data,m.data,n);        
+        std::vector<T> tmp=mat_mul((*this).data,m.data);        
         (*this).data.swap(tmp);
         return *this;
     } 
@@ -324,17 +383,15 @@ template<typename T>
 matrix<T> operator*(matrix<T> const& m1,matrix<T> const& m2)
 {  
     matrix<T> result;
-    int n{m1.N};
-    result.N=n;
-    result.data=mat_mul(m1.data,m2.data,n);
+    result.N=m1.N;
+    result.data=mat_mul(m1.data,m2.data);
     return result;
 }
 
 template<typename T>
 matrix<T> && operator*(matrix<T> const& m1,matrix<T> && m2)
 {
-    int n{m1.N};
-    std::vector<T> tmp=mat_mul(m1.data,m2.data,n);
+    std::vector<T> tmp=mat_mul(m1.data,m2.data);
     m2.data.swap(tmp);
     return std::move(m2);
 }
@@ -342,8 +399,7 @@ matrix<T> && operator*(matrix<T> const& m1,matrix<T> && m2)
 template<typename T>
 matrix<T> && operator*(matrix<T> && m1,matrix<T> const& m2)
 {
-    int n{m1.N};
-    std::vector<T> tmp=mat_mul(m1.data,m2.data,n);
+    std::vector<T> tmp=mat_mul(m1.data,m2.data);
     m1.data.swap(tmp);
     return std::move(m1);
 }
@@ -351,8 +407,7 @@ matrix<T> && operator*(matrix<T> && m1,matrix<T> const& m2)
 template<typename T>
 matrix<T> && operator*(matrix<T> && m1,matrix<T> && m2)
 {
-    int n{m1.N};
-    std::vector<T> tmp=mat_mul(m1.data,m2.data,n);
+    std::vector<T> tmp=mat_mul(m1.data,m2.data);
     m1.data.swap(tmp);
     return std::move(m1);
 }
@@ -363,23 +418,36 @@ matrix<T> && operator*(matrix<T> && m1,matrix<T> && m2)
 template<typename T>
 std::ostream& operator<<(std::ostream& o,matrix<T> const& m)
 {
-	int n{m.N};
+    int n{m.N};
+    o<<n<<',';
 	if(n>0)
 	{
-		for(int i=0;i<=n-1;i++)
+		for(int i=0;i<=n*n-1;i++)
 		{
-            o<<" ";
-            for(int j=0;j<=n-1;j++)
-            {
-                o<<m(i,j)<<" ";
-            }
-            o<<"\n";
+            o<<m.data[i]<<",";
 		}
 	}
 	return o;
 }
 
+//istream
+template<typename T>
+std::istream& operator>>(std::istream& i,matrix<T> & m)
+{
+    std::string tmp;
+    std::getline(i,tmp);
+    std::stringstream ii(tmp);
+    std::getline(ii,tmp,',');
+    m.N=std::stoi(tmp);
+    for(int j=0;j<=m.N*m.N-1;j++)
+    {
+        std::getline(ii,tmp,',');
+        m.data[j]=std::stod(tmp);
+    }
+    return i;
+}
 
+//further functions for unit tests
 //check if two 2x2 matrices are equal
 template<typename T>
 void mat_eq(matrix<T> const& m1,matrix<T> const& m2)
@@ -390,7 +458,7 @@ void mat_eq(matrix<T> const& m1,matrix<T> const& m2)
         std::cout<<"Elements are not equal in given matrices."<<std::endl;
         std::exit(-1);
     }
-    if(m1.size()!=m1.size() || m1.N!=m2.N)
+    if(m1.size()!=m2.size() || m1.N!=m2.N)
     {
         std::cout<<"Matrix variables are not equal in given matrices."<<std::endl;
         std::exit(-1);

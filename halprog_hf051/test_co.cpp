@@ -13,7 +13,7 @@ int main(int,char**)
     }
 
     //list initialization and indexing
-    matrix<double> m1{{3.1,2.3,1.1,6.5}};
+    matrix<double> m1{2,{3.1,2.3,1.1,6.5}};
     if(m1.size()!=4 || m1(0,0)!=3.1 || m1(0,1)!=2.3 || m1(1,0)!=1.1 || m1(1,1)!=6.5 || m1.N!=2)
     {
         return 1;

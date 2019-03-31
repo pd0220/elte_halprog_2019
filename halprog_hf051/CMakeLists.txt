@@ -40,6 +40,9 @@ if(BUILD_TESTING)
 
   add_executable(test_assigned test_assigned.cpp)
   add_test(NAME test_assigned COMMAND test_assigned)
+
+  add_executable(test_stream test_stream.cpp)
+  add_test(NAME test_stream COMMAND test_stream)
 endif(BUILD_TESTING)
                                                
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})

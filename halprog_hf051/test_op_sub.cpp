@@ -6,13 +6,13 @@ int main(int,char**)
 {
     //test matrices are m1={{4.5,3.4},{3.3,2.6}}, m2={{5.5,2.4},{12.1,3.9}}
     //m1-m2=m3={{-1.0,1.0},{-8.8,-1.3}} from WolframAlpha
-    matrix<double> m1{{4.5,3.4,3.3,2.6}};
+    matrix<double> m1{2,{4.5,3.4,3.3,2.6}};
     matrix<double> m1_ref1{m1};
     matrix<double> m1_ref2{m1};
-    matrix<double> m2{{5.5,2.4,12.1,3.9}};
+    matrix<double> m2{2,{5.5,2.4,12.1,3.9}};
     matrix<double> m2_ref1{m2};
     matrix<double> m2_ref2{m2};
-    matrix<double> m3{{-1.0,1.0,-8.8,-1.3}};
+    matrix<double> m3{2,{-1.0,1.0,-8.8,-1.3}};
 
     //const& - const&
     matrix<double> msub1{m1-m2};

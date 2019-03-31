@@ -8,10 +8,10 @@ int main(int,char**)
     //test scalar is a=1.2
     //ma_r=m1*a=ma={{5.4,4.08},{3.96,3.12}} from WolframAlpha
     //ma_l=a*m1=ma={{5.4,4.08},{3.96,3.12}}
-    matrix<double> m11{{4.5,3.4,3.3,2.6}};
+    matrix<double> m11{2,{4.5,3.4,3.3,2.6}};
     matrix<double> m12{m11};
     double a{1.2};
-    matrix<double> ma{{5.4,4.08,3.96,3.12}};
+    matrix<double> ma{2,{5.4,4.08,3.96,3.12}};
 
     //const& (from right)
     matrix<double> ma_r{m11*a};
