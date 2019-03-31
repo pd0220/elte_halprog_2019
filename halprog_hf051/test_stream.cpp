@@ -9,7 +9,6 @@ int main(int,char**)
     
     std::stringstream ss1;
     ss1<<m1;
-    std::string s1=ss1.str();
     
     matrix<double> m2(2);
     ss1>>m2;
