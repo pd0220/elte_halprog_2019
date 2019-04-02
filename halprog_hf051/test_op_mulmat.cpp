@@ -1,4 +1,4 @@
-#include "matrix.hh"
+#include "Matrix.hh"
 
 //multiplication by matrix test
 //main function

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(halprog_hf051_mat VERSION 0.1.0)
+project(halprog_hf051_mat_class VERSION 0.1.0)
 
 include(CTest)
 enable_testing()
@@ -8,7 +8,7 @@ if (MSVC)
   string(REGEX REPLACE "/W[0-9]" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 endif (MSVC)
 
-add_executable(halprog_hf051_mat main.cpp)
+add_executable(halprog_hf051_mat_class main.cpp)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17
                                                  CXX_STANDARD_REQUIRED ON

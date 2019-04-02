@@ -1,7 +1,6 @@
-#include "matrix.hh"
+#include "Matrix.hh"
 
-//main function
-int main(int,char**)
-{
+int main()
+{   
     return 0;
-} 
+}

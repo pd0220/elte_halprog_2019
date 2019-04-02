@@ -1,4 +1,4 @@
-#include "matrix.hh"
+#include "Matrix.hh"
 
 //operator assignment test
 //main function

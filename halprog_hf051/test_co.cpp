@@ -1,4 +1,4 @@
-#include "matrix.hh"
+#include "Matrix.hh"
 
 //test for constructors
 //main function
@@ -14,10 +14,30 @@ int main(int,char**)
 
     //list initialization and indexing
     matrix<double> m1{2,{3.1,2.3,1.1,6.5}};
-    if(m1.size()!=4 || m1(0,0)!=3.1 || m1(0,1)!=2.3 || m1(1,0)!=1.1 || m1(1,1)!=6.5 || m1.N!=2)
+    if(m1.size()!=4 || m1(0,0)!=3.1 || m1(0,1)!=2.3 || m1(1,0)!=1.1 || m1(1,1)!=6.5 || m1.get_dim()!=2)
     {
         return 1;
     }
+
+    //parameterized default #1
+    //test matrix is mp1t={{0,0},{0,0}}
+    matrix<double> mp1t{2,{0.0,0.0,0.0,0.0}};
+    matrix<double> mp1(2);
+    mat_eq(mp1,mp1t);
+
+    //parameterized default #2
+    //test matrix is mp2t={{1.0,2.0},{3.0,4.0}}
+    matrix<double> mp2t{2,{1.0,2.0,3.0,4.0}};
+    std::vector<double> vp2{1.0,2.0,3.0,4.0};
+    matrix<double> mp2(vp2);
+    mat_eq(mp2,mp2t);
+
+    //parameterized default #3
+    //test matrix is mp3t={{1.0,2.0},{3.0,4.0}}
+    matrix<double> mp3t{2,{1.0,2.0,3.0,4.0}};
+    std::vector<double> vp3{1.0,2.0,3.0,4.0};
+    matrix<double> mp3(2,vp3);
+    mat_eq(mp3,mp3t);
 
     //copy
     matrix<double> m1_cpy{m1};
@@ -29,12 +49,19 @@ int main(int,char**)
     mat_eq(m3,m1);
     mat_if0(m2);
 
-    //function of indexes
-    matrix<double> m4([](int i,int j){ return i+j;},2);
-    if(m4.size()!=4 || m4.N!=2 || m4(0,0)!=0 || m4(0,1)!=1 || m4(1,0)!=1 || m4(1,1)!=2)
-    {
-        return 1;
-    }
+    //function of 1 index
+    //test matrix will be mit={{0.0,2.0},{4.0,6.0}}
+    index1 one;
+    matrix<double> mi(one,[](int i){return 2*i;},4);
+    matrix<double> mit{2,{0.0,2.0,4.0,6.0}};
+    mat_eq(mi,mit);
 
-    return 0;
+    //function of 2 indices
+    //test matrix will be miit={{0.0,1.0,}{1.0,2,0}}
+    index2 two;
+    matrix<double> mii(two,[](int i,int j){return i+j;},2);
+    matrix<double> miit{2,{0.0,1.0,1.0,2.0}};
+    mat_eq(mii,miit);
+
+    return 0;    
 }
