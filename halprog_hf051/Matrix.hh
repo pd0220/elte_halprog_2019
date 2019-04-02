@@ -109,7 +109,7 @@ auto sub=[](auto const& x,auto const& y){return x-y;};
 
 //--------------------------------------------------------------------------------------------------------
 
-//matrix struct (square matrices only)
+//matrix class (square matrices only)
 template<typename T>
 class matrix
 {
