@@ -42,10 +42,10 @@ index2 two;
 //matrix multiplication function for square matrices
 //2 types
 template<typename T>
-std::vector<T> mat_mul(std::vector<T> const& data1,std::vector<T> const& data2)
+std::vector<T> mat_mul(std::vector<T> const& data1,std::vector<T> const& data2,int n)
 {
     std::vector<T> tmp;
-    double dim{std::sqrt(data1.size())};
+    double dim=static_cast<double>(n);
     //check if given matrices are square matrices
     if(dim-std::floor(dim)!=0)
     {
@@ -70,10 +70,10 @@ std::vector<T> mat_mul(std::vector<T> const& data1,std::vector<T> const& data2)
 }
 
 template<typename T>
-std::vector<T> mat_mul(std::vector<T> && data1,std::vector<T> const& data2)
+std::vector<T> mat_mul(std::vector<T> && data1,std::vector<T> const& data2,int n)
 {
     std::vector<T> tmp_vec;
-    double dim{std::sqrt(data1.size())};
+    double dim=static_cast<double>(n);
     //check if given matrices are square matrices
     if(dim-std::floor(dim)!=0)
     {
@@ -132,7 +132,7 @@ class matrix
     //parameterized default #2
     matrix(int n,std::vector<T> vec): dim{n}, data{vec}
     {
-        if(static_cast<double>(dim)-std::sqrt(static_cast<double>(vec.size())))
+        if(static_cast<double>(dim*dim)-static_cast<double>(vec.size()))
         {
             std::cout<<"Square matrix cannot be created."<<std::endl;
             std::exit(-1);
@@ -222,7 +222,7 @@ class matrix
     //multiplication assignment by matrices (*=)
     matrix<T>& operator*=(matrix<T> const& m)
     {
-        std::vector<T> tmp=mat_mul((*this).data,m.data);        
+        std::vector<T> tmp=mat_mul((*this).data,m.data,dim);        
         (*this).data.swap(tmp);
         return *this;
     }
@@ -267,9 +267,9 @@ class matrix
     {
         return (*this).data;
     }
-    std::vector<T> get_data() &&
+    std::vector<T> get_data() &
     {
-        return std::move((*this).data);
+        return (*this).data;
     }
 
 //--------------------------------------------------------------------------------------------------------
@@ -279,7 +279,7 @@ class matrix
     friend matrix<T> operator+(matrix<T> const& m1,matrix<T> const& m2)
     {
         int n=m1.get_dim();
-        auto madd=[&](int i){std::vector<T> vec;vec.resize(static_cast<size_t>(n*n));detail::transform2(m1.get_data(),m2.get_data(),vec,add);return vec[i];};
+        auto madd=[&](int i){return m1.get_data()[i]+m2.get_data()[i];};
         matrix<T> result(one,madd,n);
         return result;
     }
@@ -306,7 +306,7 @@ class matrix
     friend matrix<T> operator-(matrix<T> const& m1, matrix<T> const& m2)
     {
         int n=m2.get_dim();
-        auto msub=[&](int i){std::vector<T> vec;vec.resize(static_cast<size_t>(n*n));detail::transform2(m1.get_data(),m2.get_data(),vec,sub);return vec[i];};
+        auto msub=[&](int i){return m1.get_data()[i]-m2.get_data()[i];};
         matrix<T> result(one,msub,n);
         return result;
     }
@@ -333,7 +333,7 @@ class matrix
     friend matrix<T> operator*(matrix<T> const& m,T const& scl)
     {
         int n=m.get_dim();
-        auto mmulscl=[&](int i){std::vector<T> vec;vec.resize(static_cast<size_t>(n*n));detail::transform1(m.get_data(),vec,[&](T const& x){return x*scl;});return vec[i];};
+        auto mmulscl=[&](int i){return m.get_data()[i]*scl;};
         matrix<T> result(one,mmulscl,n);
         return result;
     }
@@ -346,7 +346,7 @@ class matrix
     friend matrix<T> operator*(T const& scl,matrix<T> const& m)
     {
         int n=m.get_dim();
-        auto mmulscl=[&](int i){std::vector<T> vec;vec.resize(static_cast<size_t>(n*n));detail::transform1(m.get_data(),vec,[&](T const& x){return scl*x;});return vec[i];};
+        auto mmulscl=[&](int i){return scl*m.get_data()[i];};
         matrix<T> result(one,mmulscl,n);
         return result;
     }
@@ -363,7 +363,7 @@ class matrix
     friend matrix<T> operator/(matrix<T> const& m,T const& scl)
     {
         int n=m.get_dim();
-        auto mdivscl=[&](int i){std::vector<T> vec;vec.resize(static_cast<size_t>(n*n));detail::transform1(m.get_data(),vec,[&](T const& x){return x/scl;});return vec[i];};
+        auto mdivscl=[&](int i){return m.get_data()[i]/scl;};
         matrix<T> result(one,mdivscl,n);
         return result;
     }
@@ -381,25 +381,25 @@ class matrix
     friend matrix<T> operator*(matrix<T> const& m1, matrix<T> const& m2)
     {
         int n=m1.get_dim();
-        auto mmulm=[&](int i){std::vector<T> vec=mat_mul(m1.get_data(),m2.get_data());return vec[i];};
+        auto mmulm=[&](int i){return mat_mul(m1.get_data(),m2.get_data(),n)[i];};
         matrix<T> result(one,mmulm,n);
         return result;
     }
     friend matrix<T> && operator*(matrix<T> const& m1, matrix<T> && m2)
     {
-        std::vector<T> tmp=mat_mul(m1.get_data(),m2.get_data());
+        std::vector<T> tmp=mat_mul(m1.get_data(),m2.get_data(),m1.get_dim());
         m2.data.swap(tmp);
         return std::move(m2);
     }
     friend matrix<T> && operator*(matrix<T> && m1, matrix<T> const& m2)
     {
-        std::vector<T> tmp=mat_mul(m1.get_data(),m2.get_data());
+        std::vector<T> tmp=mat_mul(m1.get_data(),m2.get_data(),m1.get_dim());
         m1.data.swap(tmp);
         return std::move(m1);
     }
     friend matrix<T> && operator*(matrix<T> && m1, matrix<T> && m2)
     {
-        std::vector<T> tmp=mat_mul(m1.get_data(),m2.get_data());
+        std::vector<T> tmp=mat_mul(m1.get_data(),m2.get_data(),m1.get_dim());
         m1.data.swap(tmp);
         return std::move(m1);
     }
@@ -490,8 +490,3 @@ void mat_if0(matrix<T> const& m)
         std::exit(-1);
     }
 }
-
-
-
-
-
