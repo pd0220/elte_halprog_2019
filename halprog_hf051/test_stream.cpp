@@ -19,8 +19,7 @@ int main(int,char**)
     //test matrix will be x_ref={{1.1,2.2},{3.3,4.4}}
     std::string str("2;1.1,2.2,3.3,4.4");
     matrix<double> x_ref{2,{1.1,2.2,3.3,4.4}};
-    std::stringstream ss_1;
-    ss_1<<str;
+    std::stringstream ss_1(str);
 
     matrix<double> x(2);
     ss_1>>x;

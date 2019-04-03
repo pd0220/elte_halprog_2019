@@ -14,7 +14,7 @@ int main(int,char**)
 
     //list initialization and indexing
     matrix<double> m1{2,{3.1,2.3,1.1,6.5}};
-    if(m1.size()!=4 || m1(0,0)!=3.1 || m1(0,1)!=2.3 || m1(1,0)!=1.1 || m1(1,1)!=6.5 || m1.get_dim()!=2)
+    if(m1.size()!=static_cast<size_t>(4) || m1(0,0)!=3.1 || m1(0,1)!=2.3 || m1(1,0)!=1.1 || m1(1,1)!=6.5 || m1.get_dim()!=2)
     {
         return 1;
     }
@@ -26,13 +26,6 @@ int main(int,char**)
     mat_eq(mp1,mp1t);
 
     //parameterized default #2
-    //test matrix is mp2t={{1.0,2.0},{3.0,4.0}}
-    matrix<double> mp2t{2,{1.0,2.0,3.0,4.0}};
-    std::vector<double> vp2{1.0,2.0,3.0,4.0};
-    matrix<double> mp2(vp2);
-    mat_eq(mp2,mp2t);
-
-    //parameterized default #3
     //test matrix is mp3t={{1.0,2.0},{3.0,4.0}}
     matrix<double> mp3t{2,{1.0,2.0,3.0,4.0}};
     std::vector<double> vp3{1.0,2.0,3.0,4.0};
@@ -52,7 +45,7 @@ int main(int,char**)
     //function of 1 index
     //test matrix will be mit={{0.0,2.0},{4.0,6.0}}
     index1 one;
-    matrix<double> mi(one,[](int i){return 2*i;},4);
+    matrix<double> mi(one,[](int i){return 2*i;},2);
     matrix<double> mit{2,{0.0,2.0,4.0,6.0}};
     mat_eq(mi,mit);
 
