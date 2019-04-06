@@ -40,30 +40,22 @@ index2 two;
 //--------------------------------------------------------------------------------------------------------
 
 //matrix multiplication function for square matrices
-//2 types
+//4 types
 template<typename T>
 std::vector<T> mat_mul(std::vector<T> const& data1,std::vector<T> const& data2,int n)
 {
     std::vector<T> tmp;
-    double dim=static_cast<double>(n);
-    //check if given matrices are square matrices
-    if(dim-std::floor(dim)!=0)
-    {
-        std::cout<<"Given matrices are not square matrices."<<std::endl;
-        std::exit(-1);
-    }
-    dim=static_cast<int>(dim);
     tmp.resize(data1.size());
-    for(int i{0};i<=dim-1;i++)
+    for(int i{0};i<=n-1;i++)
     {
-        for(int j{0};j<=dim-1;j++)
+        for(int j{0};j<=n-1;j++)
         {
             T val{0};
-            for(int k{0};k<=dim-1;k++)
+            for(int k{0};k<=n-1;k++)
             {
-                val+=data1[dim*i+k]*data2[dim*k+j];
+                val+=data1[n*i+k]*data2[n*k+j];
             }
-            tmp[dim*i+j]=val;
+            tmp[n*i+j]=val;
         }
     }
     return tmp;
@@ -73,29 +65,44 @@ template<typename T>
 std::vector<T> mat_mul(std::vector<T> && data1,std::vector<T> const& data2,int n)
 {
     std::vector<T> tmp_vec;
-    double dim=static_cast<double>(n);
-    //check if given matrices are square matrices
-    if(dim-std::floor(dim)!=0)
+    tmp_vec.resize(n);
+    for(int i{0};i<=n-1;i++)
     {
-        std::cout<<"Given matrices are not square matrices."<<std::endl;
-        std::exit(-1);
-    }
-    dim=static_cast<int>(dim);
-    tmp_vec.resize(dim);
-    for(int i{0};i<=dim-1;i++)
-    {
-        for(int j{0};j<=dim-1;j++)
+        for(int j{0};j<=n-1;j++)
         {
             T val{0};
-            for(int k{0};k<=dim-1;k++)
+            for(int k{0};k<=n-1;k++)
             {
-                val+=data1[dim*i+k]*data2[dim*k+j];
+                val+=data1[n*i+k]*data2[n*k+j];
             }
             tmp_vec[j]=val;
         }
-        for(int j{0};j<=dim-1;j++)
+        for(int j{0};j<=n-1;j++)
         {
-            data1[dim*i+j]=tmp_vec[j];
+            data1[n*i+j]=tmp_vec[j];
+        }
+    }
+    return std::move(data1);
+}
+template<typename T>
+std::vector<T> mat_mul(std::vector<T> && data1,std::vector<T> && data2,int n)
+{
+    std::vector<T> tmp_vec;
+    tmp_vec.resize(n);
+    for(int i{0};i<=n-1;i++)
+    {
+        for(int j{0};j<=n-1;j++)
+        {
+            T val{0};
+            for(int k{0};k<=n-1;k++)
+            {
+                val+=data1[n*i+k]*data2[n*k+j];
+            }
+            tmp_vec[j]=val;
+        }
+        for(int j{0};j<=n-1;j++)
+        {
+            data1[n*i+j]=tmp_vec[j];
         }
     }
     return std::move(data1);
@@ -130,7 +137,7 @@ class matrix
         data.swap(vec);
     }
     //parameterized default #2
-    matrix(int n,std::vector<T> vec): dim{n}, data{vec}
+    matrix(int n,std::vector<T> const& vec): dim{n}, data{vec}
     {
         if(static_cast<double>(dim*dim)-static_cast<double>(vec.size()))
         {
@@ -187,9 +194,17 @@ class matrix
     {
         return data[dim*i+j];
     }
-    T const & operator()(int i,int j)const
+    T const& operator()(int i,int j) const
     {
         return data[dim*i+j];
+    }
+    T& operator[](int i)
+    {
+        return data[i];
+    }
+    T const& operator[](int i) const
+    {
+        return data[i];
     }
 
 //--------------------------------------------------------------------------------------------------------
@@ -279,7 +294,7 @@ class matrix
     friend matrix<T> operator+(matrix<T> const& m1,matrix<T> const& m2)
     {
         int n=m1.get_dim();
-        auto madd=[&](int i){return m1.get_data()[i]+m2.get_data()[i];};
+        auto madd=[&](int i){return m1[i]+m2[i];};
         matrix<T> result(one,madd,n);
         return result;
     }
@@ -306,7 +321,7 @@ class matrix
     friend matrix<T> operator-(matrix<T> const& m1, matrix<T> const& m2)
     {
         int n=m2.get_dim();
-        auto msub=[&](int i){return m1.get_data()[i]-m2.get_data()[i];};
+        auto msub=[&](int i){return m1[i]-m2[i];};
         matrix<T> result(one,msub,n);
         return result;
     }
@@ -333,7 +348,7 @@ class matrix
     friend matrix<T> operator*(matrix<T> const& m,T const& scl)
     {
         int n=m.get_dim();
-        auto mmulscl=[&](int i){return m.get_data()[i]*scl;};
+        auto mmulscl=[&](int i){return m[i]*scl;};
         matrix<T> result(one,mmulscl,n);
         return result;
     }
@@ -346,7 +361,7 @@ class matrix
     friend matrix<T> operator*(T const& scl,matrix<T> const& m)
     {
         int n=m.get_dim();
-        auto mmulscl=[&](int i){return scl*m.get_data()[i];};
+        auto mmulscl=[&](int i){return scl*m[i];};
         matrix<T> result(one,mmulscl,n);
         return result;
     }
@@ -363,7 +378,7 @@ class matrix
     friend matrix<T> operator/(matrix<T> const& m,T const& scl)
     {
         int n=m.get_dim();
-        auto mdivscl=[&](int i){return m.get_data()[i]/scl;};
+        auto mdivscl=[&](int i){return m[i]/scl;};
         matrix<T> result(one,mdivscl,n);
         return result;
     }
@@ -415,9 +430,9 @@ class matrix
         {
             for(int j{0};j<=n*n-2;j++)
             {
-                o<<m.get_data()[j]<<",";
+                o<<m[j]<<",";
             }
-            o<<m.get_data()[n*n-1];
+            o<<m[n*n-1];
         }
         return o;
     }
