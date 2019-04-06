@@ -84,29 +84,6 @@ std::vector<T> mat_mul(std::vector<T> && data1,std::vector<T> const& data2,int n
     }
     return std::move(data1);
 }
-template<typename T>
-std::vector<T> mat_mul(std::vector<T> && data1,std::vector<T> && data2,int n)
-{
-    std::vector<T> tmp_vec;
-    tmp_vec.resize(n);
-    for(int i{0};i<=n-1;i++)
-    {
-        for(int j{0};j<=n-1;j++)
-        {
-            T val{0};
-            for(int k{0};k<=n-1;k++)
-            {
-                val+=data1[n*i+k]*data2[n*k+j];
-            }
-            tmp_vec[j]=val;
-        }
-        for(int j{0};j<=n-1;j++)
-        {
-            data1[n*i+j]=tmp_vec[j];
-        }
-    }
-    return std::move(data1);
-}
 
 //--------------------------------------------------------------------------------------------------------
 
