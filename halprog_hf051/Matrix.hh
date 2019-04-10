@@ -62,6 +62,61 @@ std::vector<T> mat_mul(std::vector<T> const& data1,std::vector<T> const& data2,i
 }
 
 template<typename T>
+std::vector<T> && mat_mul(std::vector<T> const& data1,std::vector<T> const& data2,std::vector<T> && data3,int n)
+{
+    if(&data3==&data1)
+    {
+        std::vector<T> tmp_vec;
+        tmp_vec.resize(static_cast<size_t>(n));
+        for(int i{0};i<=n-1;i++)
+        {
+            for(int j{0};j<=n-1;j++)
+            {
+                T val{0};
+                for(int k{0};k<=n-1;k++)
+                {
+                    val+=data1[n*i+k]*data2[n*k+j];
+                }
+                tmp_vec[j]=val;
+            }
+            for(int j{0};j<=n-1;j++)
+            {
+                data3[n*i+j]=tmp_vec[j];
+            }
+        }
+        return std::move(data1);
+    }
+    else if(&data3==&data2)
+    {
+        std::vector<T> tmp_vec;
+        tmp_vec.resize(static_cast<size_t>(n));
+        for(int i{0};i<=n-1;i++)
+        {
+            for(int j{0};j<=n-1;j++)
+            {
+                T val{0};
+                for(int k{0};k<=n-1;k++)
+                {
+                    val+=data1[n*j+k]*data2[n*k+i];
+                }
+                tmp_vec[j]=val;
+            }
+            for(int j{0};j<=n-1;j++)
+            {
+                data3[n*j+i]=tmp_vec[j];
+            }
+        }
+        return std::move(data2);
+    }
+    else
+    {
+        std::cout<<"Not appropriate container."<<std::endl;
+        std::exit(-1);
+    }
+}
+
+/*
+template<typename T>
 std::vector<T> && mat_mul(std::vector<T> && data1,std::vector<T> const& data2,int n)
 {
     std::vector<T> tmp_vec;
@@ -84,8 +139,9 @@ std::vector<T> && mat_mul(std::vector<T> && data1,std::vector<T> const& data2,in
     }
     return std::move(data1);
 }
+*/
 
-
+/*
 template<typename T>
 std::vector<T> mat_mul(std::vector<T> const& data1,std::vector<T> && data2,int n)
 {
@@ -109,7 +165,7 @@ std::vector<T> mat_mul(std::vector<T> const& data1,std::vector<T> && data2,int n
     }
     return std::move(data2);
 }
-
+*/
 
 //--------------------------------------------------------------------------------------------------------
 
@@ -399,7 +455,7 @@ class matrix
     friend matrix<T> operator*(matrix<T> const& m1, matrix<T> const& m2)
     {
         int n=m1.get_dim();
-        auto mmulm=[&](int i){return mat_mul(m1.data,m2.data,n)[i];};
+        auto mmulm=[&](int i){return mat_mul(m1.get_data(),m2.get_data(),n)[i];};
         matrix<T> result(one,mmulm,n);
         return result;
     }
