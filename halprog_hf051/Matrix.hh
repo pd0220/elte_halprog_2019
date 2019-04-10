@@ -40,7 +40,7 @@ index2 two;
 //--------------------------------------------------------------------------------------------------------
 
 //matrix multiplication function for square matrices
-//4 types
+//3 types
 template<typename T>
 std::vector<T> mat_mul(std::vector<T> const& data1,std::vector<T> const& data2,int n)
 {
@@ -62,10 +62,10 @@ std::vector<T> mat_mul(std::vector<T> const& data1,std::vector<T> const& data2,i
 }
 
 template<typename T>
-std::vector<T> mat_mul(std::vector<T> && data1,std::vector<T> const& data2,int n)
+std::vector<T> && mat_mul(std::vector<T> && data1,std::vector<T> const& data2,int n)
 {
     std::vector<T> tmp_vec;
-    tmp_vec.resize(n);
+    tmp_vec.resize(static_cast<size_t>(n));
     for(int i{0};i<=n-1;i++)
     {
         for(int j{0};j<=n-1;j++)
@@ -84,6 +84,32 @@ std::vector<T> mat_mul(std::vector<T> && data1,std::vector<T> const& data2,int n
     }
     return std::move(data1);
 }
+
+
+template<typename T>
+std::vector<T> mat_mul(std::vector<T> const& data1,std::vector<T> && data2,int n)
+{
+    std::vector<T> tmp_vec;
+    tmp_vec.resize(static_cast<size_t>(n));
+    for(int i{0};i<=n-1;i++)
+    {
+        for(int j{0};j<=n-1;j++)
+        {
+            T val{0};
+            for(int k{0};k<=n-1;k++)
+            {
+                val+=data1[n*j+k]*data2[n*k+i];
+            }
+            tmp_vec[j]=val;
+        }
+        for(int j{0};j<=n-1;j++)
+        {
+            data2[n*j+i]=tmp_vec[j];
+        }
+    }
+    return std::move(data2);
+}
+
 
 //--------------------------------------------------------------------------------------------------------
 
@@ -259,11 +285,11 @@ class matrix
     {
         return (*this).data;
     }
+    
     std::vector<T> get_data() &
     {
         return (*this).data;
     }
-
 //--------------------------------------------------------------------------------------------------------
 
     //addititon of matrices (+)
@@ -373,25 +399,25 @@ class matrix
     friend matrix<T> operator*(matrix<T> const& m1, matrix<T> const& m2)
     {
         int n=m1.get_dim();
-        auto mmulm=[&](int i){return mat_mul(m1.get_data(),m2.get_data(),n)[i];};
+        auto mmulm=[&](int i){return mat_mul(m1.data,m2.data,n)[i];};
         matrix<T> result(one,mmulm,n);
         return result;
     }
     friend matrix<T> && operator*(matrix<T> const& m1, matrix<T> && m2)
     {
-        std::vector<T> tmp=mat_mul(m1.get_data(),m2.get_data(),m1.get_dim());
+        std::vector<T> tmp=mat_mul(m1.data,m2.get_data(),m1.get_dim());
         m2.data.swap(tmp);
         return std::move(m2);
     }
     friend matrix<T> && operator*(matrix<T> && m1, matrix<T> const& m2)
     {
-        std::vector<T> tmp=mat_mul(m1.get_data(),m2.get_data(),m1.get_dim());
+        std::vector<T> tmp=mat_mul(m1.get_data(),m2.data,m1.get_dim());
         m1.data.swap(tmp);
         return std::move(m1);
     }
     friend matrix<T> && operator*(matrix<T> && m1, matrix<T> && m2)
     {
-        std::vector<T> tmp=mat_mul(m1.get_data(),m2.get_data(),m1.get_dim());
+        std::vector<T> tmp=mat_mul(m1.data,m2.data,m1.get_dim());
         m1.data.swap(tmp);
         return std::move(m1);
     }

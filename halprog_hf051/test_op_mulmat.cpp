@@ -17,7 +17,7 @@ int main(int,char**)
     //const& - const&
     matrix<double> mmul1{m1*m2};
     mat_eq(m3,mmul1);
-    
+
     //const& - &&
     matrix<double> mmul2{m1*std::move(m2_ref1)};
     mat_eq(m3,mmul2);
@@ -28,10 +28,11 @@ int main(int,char**)
     mat_eq(m3,mmul3);
     mat_if0(m1_ref1);
 
+
     //&& - &&
     matrix<double> mmul4={std::move(m1_ref2)*std::move(m2_ref2)};
     mat_eq(m3,mmul4);
     mat_if0(m1_ref2);
-    
+
     return 0;
 }
