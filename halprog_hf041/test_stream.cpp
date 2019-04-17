@@ -18,7 +18,7 @@ int main(int,char**)
     }
 
     //test string will be str1("1.1,2.2")
-    //test vector will be x_ref=(1.1,2.2)
+    //test vector will x_ref=(1.1,2.2)
     std::string str("1.1,2.2");
     vector2<double> x_ref{1.1,2.2};
     std::stringstream ss_1;

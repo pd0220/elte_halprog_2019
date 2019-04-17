@@ -74,11 +74,14 @@ std::istream& operator>>(std::istream& i,vector2<T> & v)
 
     std::getline(ii,tmp,',');
     if(tmp.size()==0){restore_stream();return i;}
-    v.x=std::stod(tmp);
+    std::stringstream vx_ss(tmp);
+    vx_ss>>v.x;
 
     std::getline(ii,tmp);
     if(tmp.size()==0){restore_stream();return i;}
-    v.y=std::stod(tmp);
+    std::stringstream vy_ss(tmp);
+    vy_ss>>v.y;
+
     return i;
 }
 
