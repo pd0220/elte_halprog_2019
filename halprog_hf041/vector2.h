@@ -133,11 +133,6 @@ auto dot(vector2<T1> const& v1,vector2<T2> const& v2)
 template<typename T>
 auto length(vector2<T> const& v)
 {
-    if(v.x==0 && v.y==0)
-    {
-        std::cout<<"error\nLenght of vector cannot be interpreted."<<std::endl;
-        exit(-1);
-    }
     return std::sqrt(v.x*v.x+v.y*v.y);
 }
 
@@ -145,11 +140,6 @@ auto length(vector2<T> const& v)
 template<typename T>
 auto sqlenght(vector2<T> const& v)
 {
-    if(v.x==0 && v.y==0)
-    {
-        std::cout<<"error\nLenght of vector cannot be interpreted."<<std::endl;
-        exit(-1);
-    }
     return v.x*v.x+v.y*v.y;
 }
 
