@@ -445,27 +445,36 @@ class matrix
         if(s_tmp.size()==0){restore_stream();return i;}
         int d_tmp=std::stoi(s_tmp);
 
-        std::vector<T> v_tmp(d_tmp*d_tmp);
+        std::vector<T> v_tmp;
 
         for(int j{0};j<=d_tmp*d_tmp-2;j++)
         {
             std::getline(ii,s_tmp,',');
             if(s_tmp.size()==0){restore_stream();return i;}
             std::stringstream ss_tmp(s_tmp);
-            ss_tmp>>v_tmp[j];
+            T t_tmp;
+            ss_tmp>>t_tmp;
+            v_tmp.push_back(t_tmp);
         }
 
         std::getline(ii,s_tmp);
         if(s_tmp.size()==0){restore_stream();return i;}
         std::stringstream ss_tmp(s_tmp);
-        ss_tmp>>v_tmp[d_tmp*d_tmp-1];
+        T t_tmp;
+        ss_tmp>>t_tmp;
+        v_tmp.push_back(t_tmp);
 
         if(static_cast<size_t>(d_tmp*d_tmp)==v_tmp.size())
         {
             m.dim=d_tmp;
             m.data=v_tmp;
         }
-
+        else
+        {
+            std::cout<<"Matrix dimension is not appropriate."<<std::endl;
+        }
+        
+        
         return i;
     }
 };
