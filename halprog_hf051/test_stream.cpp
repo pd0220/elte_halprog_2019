@@ -4,7 +4,7 @@
 //main function
 int main(int,char**)
 {
-     //test matrix is m1={{4.5,3.4},{3.3,2.6}}
+    //test matrix is m1={{4.5,3.4},{3.3,2.6}}
     matrix<double> m1{2,{4.5,3.4,3.3,2.6}};
     
     std::stringstream ss1;
@@ -38,6 +38,6 @@ int main(int,char**)
         std::cout<<"prob"<<std::endl;
         return 1;
     }
-    
+       
     return 0;
 }
