@@ -132,16 +132,16 @@ auto dot(vector2<T1> const& v1,vector2<T2> const& v2)
     return v1.x*v2.x+v1.y*v2.y;
 }
 
-//lenght of a vector
+//length of a vector
 template<typename T>
 auto length(vector2<T> const& v)
 {
     return std::sqrt(v.x*v.x+v.y*v.y);
 }
 
-//square lenght of a vector
+//square length of a vector
 template<typename T>
-auto sqlenght(vector2<T> const& v)
+auto sqlength(vector2<T> const& v)
 {
     return v.x*v.x+v.y*v.y;
 }

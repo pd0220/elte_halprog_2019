@@ -25,10 +25,10 @@ int main(int,char**)
         return 1;
     }
 
-    //square lenght of a vector
+    //square length of a vector
     //square length of v2 is 134.1665
     double sqlength_ref=134.1665;
-    if(std::abs(sqlenght(v2)-134.1665)>=1e-5)
+    if(std::abs(sqlength(v2)-134.1665)>=1e-5)
     {
         return 1;
     }
