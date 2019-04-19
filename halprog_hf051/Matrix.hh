@@ -31,9 +31,11 @@ namespace detail
 //--------------------------------------------------------------------------------------------------------
 
 //helper structs
+struct index0{};
 struct index1{};
 struct index2{};
 
+index0 zero;
 index1 one;
 index2 two;
 
@@ -157,12 +159,22 @@ class matrix
             std::exit(-1);
         }
     }
-
+    
+    //function
+    template<typename F>
+    matrix(index0,F f,int n):dim{n}
+    {
+        data.resize(static_cast<size_t>(n*n));
+        for(int i{0};i<=n*n-1;i++)
+        {
+            data[i]=f();
+        }
+    }
+    
     //function of 1 index
     template<typename F>
-	matrix(index1,F f,int n)
+	matrix(index1,F f,int n):dim{n}
     {
-        dim=n;
 		data.resize(static_cast<size_t>(n*n));
 		for(int i{0};i<=n*n-1;i++)
         {
