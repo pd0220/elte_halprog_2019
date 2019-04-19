@@ -85,7 +85,7 @@ std::vector<T> && mat_mul(std::vector<T> const& data1,std::vector<T> const& data
         }
         return std::move(data1);
     }
-    else if(&data3==&data2)
+    else
     {
         for(int i{0};i<=n-1;i++)
         {
@@ -104,11 +104,6 @@ std::vector<T> && mat_mul(std::vector<T> const& data1,std::vector<T> const& data
             }
         }
         return std::move(data2);
-    }
-    else
-    {
-        std::cout<<"Not appropriate container."<<std::endl;
-        std::exit(-1);
     }
 }
 
@@ -135,11 +130,7 @@ class matrix
     //default
     matrix():dim{0}{}
     //parameterized default #1
-    matrix(int n):dim{n}
-    {
-        std::vector<T> vec(dim*dim,0.0);
-        data.swap(vec);
-    }
+    matrix(int n):dim{n},data{std::vector<T>(n*n,(T)0)}{}
     //parameterized default #2
     matrix(int n,std::vector<T> const& vec): dim{n}, data{vec}
     {
@@ -468,12 +459,14 @@ class matrix
         {
             m.dim=d_tmp;
             m.data=v_tmp;
+            v_tmp.clear();
+            s_tmp.clear();
+            ss_tmp.clear();
         }
         else
         {
             std::cout<<"Matrix dimension is not appropriate."<<std::endl;
         }
-        
         
         return i;
     }
