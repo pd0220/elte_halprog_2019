@@ -64,7 +64,7 @@ std::vector<T> mat_mul(std::vector<T> const& data1,std::vector<T> const& data2,i
 }
 
 template<typename T>
-std::vector<T> && mat_mul(std::vector<T> const& data1,std::vector<T> const& data2,std::vector<T> && data3,int n)
+std::vector<T> && mat_mul(std::vector<T> const& data1,std::vector<T> const& data2,std::vector<T> & data3,int n)
 {
     std::vector<T> tmp_vec(n);
     if(&data3==&data1)
@@ -85,7 +85,7 @@ std::vector<T> && mat_mul(std::vector<T> const& data1,std::vector<T> const& data
                 data3[n*i+j]=tmp_vec[j];
             }
         }
-        return std::move(data1);
+        return std::move(data3);
     }
     else
     {
@@ -105,7 +105,7 @@ std::vector<T> && mat_mul(std::vector<T> const& data1,std::vector<T> const& data
                 data3[n*j+i]=tmp_vec[j];
             }
         }
-        return std::move(data2);
+        return std::move(data3);
     }
 }
 
@@ -392,25 +392,25 @@ class matrix
     //4 types
     friend matrix<T> operator*(matrix<T> const& m1, matrix<T> const& m2)
     {
-        int n=m1.get_dim();
-        auto mmulm=[&](int i){return mat_mul(m1.get_data(),m2.get_data(),n)[i];};
-        return matrix<T>(one,mmulm,n);
+        std::vector<T> tmp=mat_mul(m1.get_data(),m2.get_data(),m1.get_dim());
+        auto mmulm=[&](int i,int j){return tmp[m1.get_dim()*i+j];};
+        return matrix<T>(two,mmulm,m1.get_dim());
     }
     friend matrix<T> && operator*(matrix<T> const& m1, matrix<T> && m2)
     {
-        std::vector<T> tmp=mat_mul(m1.data,m2.get_data(),m1.get_dim());
+        std::vector<T> tmp=mat_mul(m1.get_data(),m2.get_data(),m2.data,m1.get_dim());
         m2.data.swap(tmp);
         return std::move(m2);
     }
     friend matrix<T> && operator*(matrix<T> && m1, matrix<T> const& m2)
     {
-        std::vector<T> tmp=mat_mul(m1.get_data(),m2.data,m1.get_dim());
+        std::vector<T> tmp=mat_mul(m1.get_data(),m2.get_data(),m1.data,m1.get_dim());
         m1.data.swap(tmp);
         return std::move(m1);
     }
     friend matrix<T> && operator*(matrix<T> && m1, matrix<T> && m2)
     {
-        std::vector<T> tmp=mat_mul(m1.data,m2.data,m1.get_dim());
+        std::vector<T> tmp=mat_mul(m1.get_data(),m2.get_data(),m1.data,m1.get_dim());
         m1.data.swap(tmp);
         return std::move(m1);
     }
@@ -438,7 +438,7 @@ class matrix
     //istream
     friend std::istream& operator>>(std::istream& i,matrix<T> & m)
     {
-        auto restore_stream=[state=i.rdstate(),pos=i.tellg(),&i](){i.seekg(pos);i.setstate(state);};
+        auto restore_stream=[state=i.rdstate(),pos=i.tellg(),&i](){i.seekg(pos);i.clear();i.setstate(state);};
 
         std::string s_tmp;
         std::getline(i,s_tmp);
@@ -471,9 +471,6 @@ class matrix
         {
             m.dim=d_tmp;
             m.data=v_tmp;
-            v_tmp.clear();
-            s_tmp.clear();
-            ss_tmp.clear();
         }
         else
         {
