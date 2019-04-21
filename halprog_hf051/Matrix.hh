@@ -392,9 +392,9 @@ class matrix
     //4 types
     friend matrix<T> operator*(matrix<T> const& m1, matrix<T> const& m2)
     {
-        std::vector<T> tmp=mat_mul(m1.get_data(),m2.get_data(),m1.get_dim());
-        auto mmulm=[&](int i,int j){return tmp[m1.get_dim()*i+j];};
-        return matrix<T>(two,mmulm,m1.get_dim());
+        int n=m1.get_dim();
+        auto mmulm=[&](int i,int j){T val{0};for(int k{0};k<=n-1;k++) val+=m1.get_data()[n*i+k]*m2.get_data()[n*k+j];return val;};
+        return matrix<T>(two,mmulm,n);        
     }
     friend matrix<T> && operator*(matrix<T> const& m1, matrix<T> && m2)
     {
