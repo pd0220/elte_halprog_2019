@@ -470,11 +470,12 @@ class matrix
         if(static_cast<size_t>(d_tmp*d_tmp)==v_tmp.size())
         {
             m.dim=d_tmp;
-            m.data=v_tmp;
+            m.data=std::move(v_tmp);
         }
         else
         {
             std::cout<<"Matrix dimension is not appropriate."<<std::endl;
+            restore_stream();
         }
         
         return i;
