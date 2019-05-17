@@ -16,13 +16,13 @@
 //helper functions
 namespace detail
 {
-	template<typename T1,typename T2,typename F>
-	void transform1(T1 const& d1,T2& d2,F f)
+    template<typename T1,typename T2,typename F>
+    void transform1(T1 const& d1,T2& d2,F f)
     {
         std::transform(d1.cbegin(),d1.cend(),d2.begin(),f);
     }
-	template<typename T1,typename T2,typename T3,typename F>
-	void transform2(T1 const& d1,T2 const& d2,T3& d3,F f)
+    template<typename T1,typename T2,typename T3,typename F>
+    void transform2(T1 const& d1,T2 const& d2,T3& d3,F f)
     {
         std::transform(d1.cbegin(),d1.cend(),d2.cbegin(),d3.begin(),f);
     }
@@ -145,11 +145,11 @@ class matrix
     //copy
     matrix(matrix const&)=default;
     //move
-	matrix(matrix &&)=default;
+    matrix(matrix &&)=default;
     //copy assignment
-	matrix<T>& operator=(matrix const&)=default;
+    matrix<T>& operator=(matrix const&)=default;
     //move assignment
-	matrix<T>& operator=(matrix &&)=default;
+    matrix<T>& operator=(matrix &&)=default;
     //initializer list
     matrix(int n,std::initializer_list<T> const& i): dim{n}, data{i}
     {
@@ -173,14 +173,14 @@ class matrix
     
     //function of 1 index
     template<typename F>
-	matrix(index1,F f,int n):dim{n}
+    matrix(index1,F f,int n):dim{n}
     {
-		data.resize(static_cast<size_t>(n*n));
-		for(int i{0};i<=n*n-1;i++)
+	data.resize(static_cast<size_t>(n*n));
+	for(int i{0};i<=n*n-1;i++)
         {
             data[i]=f(i);
         }
-	}
+    }
     //function of 2 indices
     template<typename F>
     matrix(index2,F f,int n): dim{n}
@@ -253,29 +253,29 @@ class matrix
 
     //inner functions
     //number of elements of the matrix
-	int size() const
+    int size() const
     {
-		return static_cast<int>(data.size());
-	}
+	return static_cast<int>(data.size());
+    }
 
 //--------------------------------------------------------------------------------------------------------
 
-	//begin and end for compatibility with STL:
-	auto begin()
+    //begin and end for compatibility with STL:
+    auto begin()
     {
-		return data.begin();
-	}
-	auto cbegin() const
+	return data.begin();
+    }
+    auto cbegin() const
     {
-		return data.cbegin();
-	}
+	return data.cbegin();
+    }
 	auto end()
     {
-		return data.end();
-	}
-	auto cend() const
+	return data.end();
+    }
+    auto cend() const
     {
-		return data.cend();
+	return data.cend();
     }
 
 //--------------------------------------------------------------------------------------------------------
