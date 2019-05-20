@@ -407,7 +407,7 @@ class matrix
     {
         int n=m1.get_dim();
         
-        auto mmulm=[&](int i,int j,int it0,int it1){T val{0};for(int k=it0;k<it1;k++) val+=m1.get_data()[n*i+k]*m2.get_data()[n*k+j];return val;};
+        auto mmulm=[&](int i,int j,int it0,int it1){T val{0};for(int k=it0;k<it1;k++) val+=m1(i,k)*m2(k,j);return val;};
 
         auto mmulm_par=[&](int i,int j){int max_num_of_threads=(int)std::thread::hardware_concurrency();
                                         auto max_num_of_threads_auto=std::thread::hardware_concurrency();
@@ -423,7 +423,7 @@ class matrix
     friend matrix<T> && operator*(matrix<T> const& m1, matrix<T> && m2)
     {
         int n=m1.get_dim();
-        auto mmulm=[&](int i,int j,int it0,int it1){T val{0};for(int k=it0;k<it1;k++) val+=m1.get_data()[n*i+k]*m2.get_data()[n*k+j];return val;};
+        auto mmulm=[&](int i,int j,int it0,int it1){T val{0};for(int k=it0;k<it1;k++) val+=m1(i,k)*m2(k,j);return val;};
 
         auto mmulm_par=[&](int i,int j){int max_num_of_threads=(int)std::thread::hardware_concurrency();
                                         auto max_num_of_threads_auto=std::thread::hardware_concurrency();
@@ -441,7 +441,7 @@ class matrix
     friend matrix<T> && operator*(matrix<T> && m1, matrix<T> const& m2)
     {
         int n=m1.get_dim();
-        auto mmulm=[&](int i,int j,int it0,int it1){T val{0};for(int k=it0;k<it1;k++) val+=m1.get_data()[n*i+k]*m2.get_data()[n*k+j];return val;};
+        auto mmulm=[&](int i,int j,int it0,int it1){T val{0};for(int k=it0;k<it1;k++) val+=m1(i,k)*m2(k,j);return val;};
 
         auto mmulm_par=[&](int i,int j){int max_num_of_threads=(int)std::thread::hardware_concurrency();
                                         auto max_num_of_threads_auto=std::thread::hardware_concurrency();
@@ -459,7 +459,7 @@ class matrix
     friend matrix<T> && operator*(matrix<T> && m1, matrix<T> && m2)
     {
         int n=m1.get_dim();
-        auto mmulm=[&](int i,int j,int it0,int it1){T val{0};for(int k=it0;k<it1;k++) val+=m1.get_data()[n*i+k]*m2.get_data()[n*k+j];return val;};
+        auto mmulm=[&](int i,int j,int it0,int it1){T val{0};for(int k=it0;k<it1;k++) val+=m1(i,k)*m2(k,j);return val;};
 
         auto mmulm_par=[&](int i,int j){int max_num_of_threads=(int)std::thread::hardware_concurrency();
                                         auto max_num_of_threads_auto=std::thread::hardware_concurrency();
